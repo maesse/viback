@@ -4,3 +4,11 @@ sqlalchemy==2.0.25
 python-multipart==0.0.6
 ffmpeg-python==0.2.0
 python-configparser==6.0.0
+openai
+pyparsing
+tqdm
+pydantic
+sentence-transformers
+FlagEmbedding
+numpy
+python-dotenv
