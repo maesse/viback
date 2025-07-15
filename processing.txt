@@ -1,0 +1,52 @@
+# Limitations:
+* Some tasks should be per-video (heavier tasks: preview, thumbnail, ...)
+
+# Runtime
+* Prefer to run all available tasks of one type before the next
+* Some tasks require me to manually load external resources
+    
+
+# Structure buildup:
+Video: <- scanner task
+    path: <- scanner task
+    filename: <- scanner task
+    searchpath: <- scanner task
+    duration: <- metadata task
+    codec: <- metadata task
+    width: <- metadata task
+    height: <- metadata task
+    size: <- metadata task
+        preview_path: <- preview task
+        filename_metadata: <- filename_metadata task
+        thumbnails[]: <- thumbnail tasks
+            tag_set[]: <- tag task
+
+# Tasks:
+scanner task - processes all videos
+    Scan folders, creates Videos
+        ? !Creates tag task if some bs..fixme
+    !creates metadata task
+
+metadata task - processes all videos
+    Selects all videos with no duration
+    ffmpeg probe each video
+    !creates preview task
+    !creates thumbnail task
+
+preview task - processes 1 video
+    @depends on metadata
+    create preview video clip
+
+thumbnail task - processes 1 video
+    @depends on metadata
+    generate x amount of thumbnails for video
+
+filename_metadata task - processes all videos
+    @depends on metadata
+    !needs LLM loaded externally (Mistral 7b)
+    extracts metadata tags from file path
+
+tag task - processes all videos
+    @depends on thumbnail task
+    !needs VLM loaded externally (JoyCapture)
+    generates VideoTagSet for each video if it's missing
